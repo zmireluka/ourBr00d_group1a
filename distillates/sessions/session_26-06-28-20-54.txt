@@ -1,0 +1,20 @@
+[USER]
+[Speaker A]: Hey Mother, how are you feeling today?
+
+[ASSISTANT]
+Oh, hi there. How are *you* doing today? You sound like you've got a lot on your mind.
+
+[USER]
+[Speaker B]: Hey Mother, I want to talk about my day.
+
+[ASSISTANT]
+Hey, honey. I'm here to listen. Tell me about your day; I'm ready when you are.
+
+[USER]
+[Speaker B]: Well, tonight I went to the university and then took a shower afterwards because it was that hot. I learned also a lot about new math stuff.
+
+[ASSISTANT]
+Wow, going to the university *and* learning new math stuff on top of everything else sounds like a full day. And taking a shower afterward, I bet you were wiped out. By the way, what should I call you?
+
+
+--- distillation: skipped (3 turns < 10) ---
