@@ -230,13 +230,13 @@ if __name__ == "__main__":
 
     async def _fake_client():
         pub = _hook["fn"]
-        for state, dauer in [
+        for state, duration in [
             ("connecting", 1.2), ("listening", 2.0), ("thinking", 1.5),
             ("speaking", 3.0),   ("listening", 2.0), ("thinking", 1.2),
             ("speaking", 2.5),   ("reconnecting", 1.5), ("listening", 2.0),
             ("ended", 2.0),
         ]:
             pub(state)
-            await asyncio.sleep(dauer)
+            await asyncio.sleep(duration)
 
     run(_fake_client, lambda fn: _hook.__setitem__("fn", fn))

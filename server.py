@@ -113,7 +113,7 @@ if USE_STATIC_KNOWLEDGE:
             name=KNOWLEDGE_COLLECTION, embedding_function=embed_fn)
         print(f"Knowledge base ready ({knowledge_collection.count()} chunks).")
     except Exception as e:
-        print(f"⚠ Knowledge base not loadable ({e}) — running WITHOUT static knowledge. "
+        print(f"WARNING:Knowledge base not loadable ({e}) — running WITHOUT static knowledge. "
               f"Index built? → python3 build_knowledge_base.py")
         knowledge_collection = None
 
@@ -198,7 +198,7 @@ async def index_turn_pair_bg(collection, pair_number, user_content, mother_text)
         )
         print(f"→ RAG: pair {pair_number} indexed ({collection.count()} in store)")
     except Exception as e:
-        print(f"⚠ RAG index error at pair {pair_number}: {e}")
+        print(f"WARNING:RAG index error at pair {pair_number}: {e}")
 
 
 async def tts_speak(tts_client, sentence, websocket):
@@ -274,9 +274,9 @@ async def handle_client(websocket):
             async with httpx.AsyncClient(timeout=30) as tts_client:
                 await tts_speak(tts_client, greeting, websocket)
             await websocket.send("TTS_DONE")
-            print(f" Greeting: {greeting}")
+            print(f"Greeting: {greeting}")
         except Exception as e:
-            print(f"v Greeting skipped: {e}")
+            print(f"WARNING:Greeting skipped: {e}")
 
     try:
         async for chunk in websocket:
@@ -327,10 +327,10 @@ async def handle_client(websocket):
                 if silence_counter >= SILENCE_CHUNKS and len(audio_buffer) > 0:
                     # 600ms silence after speech → segment complete
                     segment = np.concatenate(audio_buffer)
-                    dauer = len(segment) / SAMPLE_RATE
+                    duration = len(segment) / SAMPLE_RATE
 
                     # Ignore segments that are too short (background noise, echo)
-                    if dauer < MIN_SEGMENT_DURATION:
+                    if duration < MIN_SEGMENT_DURATION:
                         audio_buffer = []
                         silence_counter = 0
                         continue
@@ -341,19 +341,19 @@ async def handle_client(websocket):
                     await websocket.send("BUSY")
 
                     # VAD wait time: from last speech chunk to segment trigger
-                    latenz_vad = time.time() - t_speech_end
+                    latency_vad = time.time() - t_speech_end
 
                     print()
                     print("=" * 60)
-                    print(f"→ Segment complete: {dauer:.1f}s audio  |  VAD wait {latenz_vad:.2f}s")
+                    print(f"→ Segment complete: {duration:.1f}s audio  |  VAD wait {latency_vad:.2f}s")
 
                     # Transcribe with WhisperX
                     t_start = time.time()
                     result = whisper_model.transcribe(segment, batch_size=WHISPER_BATCH_SIZE)
-                    latenz_stt = time.time() - t_start
+                    latency_stt = time.time() - t_start
                     text = " ".join(s["text"].strip() for s in result["segments"])
                     print(f"→ Text: {text}")
-                    print(f"→ STT latency: {latenz_stt:.2f}s")
+                    print(f"→ STT latency: {latency_stt:.2f}s")
 
                     # Ignore empty text
                     if not text.strip():
@@ -389,7 +389,7 @@ async def handle_client(websocket):
                     if norm > 0:
                         embedding = embedding / norm
 
-                    latenz_emb = time.time() - t_emb
+                    latency_emb = time.time() - t_emb
 
                     # Identify speaker: cosine similarity to known centroids
                     if not speakers:
@@ -405,13 +405,13 @@ async def handle_client(websocket):
                         if best_sim > SPEAKER_SIMILARITY_THRESHOLD:
                             label = best_id
                             # Update centroid only with long enough segments — short ones are noisy
-                            if dauer >= CENTROID_UPDATE_MIN_DURATION:
+                            if duration >= CENTROID_UPDATE_MIN_DURATION:
                                 speakers[label] = 0.9 * speakers[label] + 0.1 * embedding
                             speaker_info = f"Speaker {label} (matched, sim {best_sim:.2f})"
-                        elif dauer < MIN_SEGMENT_DURATION_FOR_NEW_SPEAKER:
+                        elif duration < MIN_SEGMENT_DURATION_FOR_NEW_SPEAKER:
                             # Short segment below threshold — no new speaker, force best match
                             label = best_id
-                            speaker_info = f"Speaker {label} (short {dauer:.1f}s, forced, sim {best_sim:.2f})"
+                            speaker_info = f"Speaker {label} (short {duration:.1f}s, forced, sim {best_sim:.2f})"
                         else:
                             # Long segment, no match → new speaker
                             label = next_speaker_id
@@ -420,7 +420,7 @@ async def handle_client(websocket):
                             speaker_info = f"Speaker {label} (new, best sim {best_sim:.2f} < {SPEAKER_SIMILARITY_THRESHOLD})"
 
                     print(f"→ {speaker_info}")
-                    print(f"→ Embedding latency: {latenz_emb:.3f}s  |  speakers: {list(speakers.keys())}")
+                    print(f"→ Embedding latency: {latency_emb:.3f}s  |  speakers: {list(speakers.keys())}")
 
                     speaker_turn_count[label] = speaker_turn_count.get(label, 0) + 1
 
@@ -441,7 +441,7 @@ async def handle_client(websocket):
                     # system prompt (context knowledge = system level, does not disturb
                     # user/assistant sequence; llm_messages[-1] stays the current
                     # turn → name hint ok).
-                    latenz_rag = 0.0   # stays 0 if RAG did not run (store empty)
+                    latency_rag = 0.0   # stays 0 if RAG did not run (store empty)
                     if rag_collection.count() > 0:
                         loop = asyncio.get_running_loop()
                         t_rag = time.time()
@@ -492,11 +492,11 @@ async def handle_client(websocket):
                                 "role": "system",
                                 "content": MOTHER_SYSTEM_PROMPT + rag_block,
                             }
-                        latenz_rag = (time.time() - t_rag) * 1000
+                        latency_rag = (time.time() - t_rag) * 1000
                         dist_str = "[" + ", ".join(
                             f"{dist:.3f}" for _, dist in cand) + "]"
                         print(f"→ RAG: {len(kept)}/{len(cand)} kept "
-                              f"({latenz_rag:.0f}ms, {rag_collection.count()} "
+                              f"({latency_rag:.0f}ms, {rag_collection.count()} "
                               f"in store) q={len(queries)} dist={dist_str} "
                               f"thr={limit:.3f}")
 
@@ -506,7 +506,7 @@ async def handle_client(websocket):
                     # prompt (additive on top of whatever in-session RAG may have set).
                     # Mother weaves the knowledge into her own voice — NO titles/authors/
                     # sources (canonical: mythic, not academic).
-                    latenz_kb = 0.0
+                    latency_kb = 0.0
                     if knowledge_collection is not None:
                         loop = asyncio.get_running_loop()
                         t_kb = time.time()
@@ -534,10 +534,10 @@ async def handle_client(websocket):
                                 "role": "system",
                                 "content": llm_messages[0]["content"] + kb_block,
                             }
-                        latenz_kb = (time.time() - t_kb) * 1000
+                        latency_kb = (time.time() - t_kb) * 1000
                         kb_dist_str = "[" + ", ".join(f"{d:.3f}" for d in kb_dists) + "]"
                         print(f"→ KB: {len(kb_kept)}/{len(kb_docs)} kept "
-                              f"({latenz_kb:.0f}ms, {knowledge_collection.count()} chunks) "
+                              f"({latency_kb:.0f}ms, {knowledge_collection.count()} chunks) "
                               f"dist={kb_dist_str} thr={KNOWLEDGE_MAX_DISTANCE}")
                         # Source debug: which works were pulled → verifies KB relevance
                         if kb_kept:
@@ -582,13 +582,13 @@ async def handle_client(websocket):
                             }
                         )
                     except Exception as e:
-                        print(f"⚠ Ollama unreachable: {e}")
+                        print(f"WARNING:Ollama unreachable: {e}")
                         await websocket.send("TTS_DONE")   # str not bytes — otherwise client won't recognise it, mother_speaking would stay True
                         continue
 
                     mother_text = ""
                     buffer = ""
-                    first_token_latenz = None
+                    first_token_latency = None
                     t_first_sentence = None
                     sentences_sent = 0
                     prefix_buf = ""      # collects first tokens until prefix check is possible
@@ -596,8 +596,8 @@ async def handle_client(websocket):
 
                     async with httpx.AsyncClient(timeout=30) as tts_client:
                         async for ollama_chunk in stream:
-                            if first_token_latenz is None:
-                                first_token_latenz = time.time() - t_llm
+                            if first_token_latency is None:
+                                first_token_latency = time.time() - t_llm
                             token = ollama_chunk["message"]["content"]
 
                             # Base models (not fine-tuned) mimic the [Speaker X]: pattern
@@ -643,36 +643,36 @@ async def handle_client(websocket):
                             await tts_speak(tts_client, buffer.strip(), websocket)
 
                     await websocket.send("TTS_DONE")
-                    latenz_llm = time.time() - t_llm
+                    latency_llm = time.time() - t_llm
                     messages.append({"role": "assistant", "content": mother_text})
 
                     # Fallback if LLM returned nothing (no sentence → None)
                     if t_first_sentence is None:
-                        t_first_sentence = latenz_llm
-                    if first_token_latenz is None:
-                        first_token_latenz = latenz_llm
+                        t_first_sentence = latency_llm
+                    if first_token_latency is None:
+                        first_token_latency = latency_llm
 
                     # Latency to first syllable = what the user experiences as "wait time".
                     # RAG runs on the critical path (after embedding, before LLM) →
                     # MUST be included, otherwise the display understates real wait time.
-                    # latenz_rag is in ms → /1000 for seconds sum.
-                    latenz_bis_silbe = (latenz_vad + latenz_stt + latenz_emb
-                                        + latenz_rag / 1000 + latenz_kb / 1000
+                    # latency_rag is in ms → /1000 for seconds sum.
+                    latency_e2e = (latency_vad + latency_stt + latency_emb
+                                        + latency_rag / 1000 + latency_kb / 1000
                                         + t_first_sentence)
 
                     print(f"→ Mother: {mother_text}")
-                    print(f"→ LLM latency: first token {first_token_latenz:.2f}s, total {latenz_llm:.2f}s")
+                    print(f"→ LLM latency: first token {first_token_latency:.2f}s, total {latency_llm:.2f}s")
                     print(f"→ Sentences spoken: {sentences_sent}")
                     print(f"→ Memory: {(len(messages)-1)//2} turn pairs"
                           + ("  |  name hint injected" if name_hint_injected else ""))
                     print("-" * 60)
-                    print(f"  LATENCY to first syllable  ≈ {latenz_bis_silbe:.2f}s")
-                    print(f"    VAD silence     {latenz_vad:.2f}s")
-                    print(f"    WhisperX STT    {latenz_stt:.2f}s")
-                    print(f"    Embedding       {latenz_emb:.2f}s")
-                    print(f"    RAG retrieval   {latenz_rag/1000:.2f}s")
-                    print(f"    KB retrieval    {latenz_kb/1000:.2f}s")
-                    print(f"    LLM → sent. 1   {t_first_sentence:.2f}s  (1st token {first_token_latenz:.2f}s)")
+                    print(f"  LATENCY to first syllable  ≈ {latency_e2e:.2f}s")
+                    print(f"    VAD silence     {latency_vad:.2f}s")
+                    print(f"    WhisperX STT    {latency_stt:.2f}s")
+                    print(f"    Embedding       {latency_emb:.2f}s")
+                    print(f"    RAG retrieval   {latency_rag/1000:.2f}s")
+                    print(f"    KB retrieval    {latency_kb/1000:.2f}s")
+                    print(f"    LLM → sent. 1   {t_first_sentence:.2f}s  (1st token {first_token_latency:.2f}s)")
                     print("=" * 60)
                     print()
 
@@ -704,7 +704,7 @@ async def handle_client(websocket):
         try:
             chroma_client.delete_collection(name=f"session_{session_id}")
         except Exception as e:
-            print(f"⚠ RAG collection deletion failed: {e}")
+            print(f"WARNING:RAG collection deletion failed: {e}")
         # Save transcript — all turns except system prompt
         if len(messages) > 1:
             DISTILLATES_DIR.mkdir(parents=True, exist_ok=True)
@@ -762,14 +762,14 @@ async def warmup():
         )
         print(f"  Ollama warm ({OLLAMA_MODEL}, num_ctx={LLM_NUM_CTX})")
     except Exception as e:
-        print(f"  ⚠ Ollama warmup skipped: {e}")
+        print(f"  WARNING:Ollama warmup skipped: {e}")
 
     # 2) WhisperX — first transcribe compiles CUDA kernels (1s of silence is enough)
     try:
         whisper_model.transcribe(np.zeros(16000, dtype=np.float32), batch_size=WHISPER_BATCH_SIZE)
         print("  WhisperX warm")
     except Exception as e:
-        print(f"  ⚠ WhisperX warmup skipped: {e}")
+        print(f"  WARNING:WhisperX warmup skipped: {e}")
 
     # 3) F5-TTS — preheat first synthesis in the tts container
     try:
@@ -780,7 +780,7 @@ async def warmup():
                     pass
         print("  F5-TTS warm")
     except Exception as e:
-        print(f"  ⚠ F5-TTS warmup skipped: {e}")
+        print(f"  WARNING:F5-TTS warmup skipped: {e}")
 
     # 4) Knowledge base — first query loads the embedding model (all-MiniLM).
     #    Also covers in-session RAG (same model).
@@ -789,7 +789,7 @@ async def warmup():
             knowledge_collection.query(query_texts=["hello"], n_results=1)
             print("  Knowledge base warm")
         except Exception as e:
-            print(f"  ⚠ KB warmup skipped: {e}")
+            print(f"  WARNING:KB warmup skipped: {e}")
 
     print(f"Warmup complete ({time.time() - t0:.1f}s) — first reply will be warm.")
 

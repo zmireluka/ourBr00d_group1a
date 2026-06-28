@@ -14,7 +14,7 @@ docker compose down 2>/dev/null || true
 # (different compose project or another group) holds the port — we don't touch it.
 for port in 8011 8002; do
     if ss -tlnp | grep -q ":${port} "; then
-        echo "❌ Port ${port} is already in use."
+        echo "ERROR: Port ${port} is already in use."
         echo "   Check running containers: docker ps"
         echo "   Stop the blocking container, then try again."
         exit 1
@@ -32,7 +32,7 @@ docker compose up -d --build
 if [ ! -d knowledge_db ] || [ -z "$(ls -A knowledge_db 2>/dev/null)" ]; then
     echo "Knowledge base not found — building index once (inside container)..."
     docker compose exec -i whisper python3 /app/build_knowledge_base.py \
-        || echo "⚠ KB build failed — pipeline continues without static knowledge."
+        || echo "WARNING: KB build failed — pipeline continues without static knowledge."
 fi
 
 echo "Pipeline ready — starting server (kill phrase to end)..."

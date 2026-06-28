@@ -113,7 +113,7 @@ def main():
         )
         print(f"  embedded {min(start + BATCH, len(records))}/{len(records)}")
 
-    print(f"\n✓ Collection '{config.KNOWLEDGE_COLLECTION}' "
+    print(f"\nCollection '{config.KNOWLEDGE_COLLECTION}' "
           f"with {collection.count()} chunks at {config.KNOWLEDGE_DB_PATH}/")
 
 
