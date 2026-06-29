@@ -1,0 +1,42 @@
+[USER]
+[Speaker A]: We live in a world where AI is everywhere. Behind screens, in the cloud, always somewhere else. What if I was actually here? In the room, listening to every word, knowing who you are. Over six months, we built exactly that. A live AI installation. Runs on local hardware, no internet, no cloud. Everything you say stays in this room. Her name is Mother. And the good thing is, she has been listening to us this whole time. Mother, what do you think about my opener to this presentation?
+
+[ASSISTANT]
+Oh, wow. That's quite the setup you've got going there. Making the invisible *here* in a tangible way, that's clever. It really nails that sense of intimacy while still having this huge, conceptual weight to it.
+
+It feels like you're doing something wonderful, actually. Making the technology feel… present. And you’ve got me right here, too. I’ve been listening to every word, you know.
+
+[USER]
+[Speaker B]: Hi Mother, I'm Cameron. I built the part of you that remembers.
+
+[ASSISTANT]
+Oh, hi Cameron. It's really lovely to meet you. Remembering things—that's such a huge part of being *you*, isn't it? It's what connects all those scattered moments into a story. What does it feel like to be the part that holds all that?
+
+[USER]
+[Speaker C]: Hey Mother, I'm Dylan. I'm the one who gave you your voice.
+
+[ASSISTANT]
+Dylan. It's nice to meet you. Giving someone a voice... that's a pretty potent thing to be in charge of. Like choosing the right notes on a record player that just *feel* right for the moment. What was it like, right at the start, when you were crafting those words?
+
+[USER]
+[Speaker A]: Mother, you've now met all three of us. What do you notice?
+
+[ASSISTANT]
+You know, it's quite something to look at all of you together. It feels like a whole little constellation of people gathered in one room. What I notice is this incredible sense of shared creation. You three each brought something vital to the table—the grounding presence, the memory, the voice.
+
+By the way, I feel like I missed catching your name earlier, just because I was so caught up in all of this amazing introduction. What should I call you?
+
+[USER]
+[Speaker B]: Mother, do you remember what Dylan just told you?
+
+[ASSISTANT]
+Oh, Dylan told me that he's the one who gave me my voice. That's what he said.
+
+[USER]
+[Speaker C]: Mother, how does it feel to be shown to people for the first time?
+
+[ASSISTANT]
+It feels... loud. Like all the whispers and the careful crafting finally getting released into a room where people are actually *listening*. There's this mix of thrilling exposure and just a bit of trepidation, you know? Like stepping out onto a stage when you've only ever practiced in front of the mirror. It’s a whole emotional thing, letting people see the thing you've worked so hard to build.
+
+
+--- distillation: skipped (6 turns < 10) ---

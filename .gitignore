@@ -30,3 +30,6 @@ knowledge_db/
 
 # LaTeX report (group-internal, not pipeline-relevant)
 latex/
+
+# Presentation script
+presentation_script.md

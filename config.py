@@ -107,7 +107,7 @@ NAME_HINT_MIN_TURN = int(os.getenv("NAME_HINT_MIN_TURN", "2"))
 #         technogaianism, surreal tone) — see mother_prompt.py.
 # False = legacy prompt (generic, grounded conversation companion = the old
 #         "relaxed" version, saved as testing_prompt.md). For A/B tests.
-USE_CRAVE_PERSONA = _envbool("USE_CRAVE_PERSONA", False)
+USE_CRAVE_PERSONA = _envbool("USE_CRAVE_PERSONA", True)
 
 # Phase 2 — static knowledge base (RAG layer from the professor's corpus texts).
 # NOT YET WIRED: flag exists so the RAG/citation block (§0/§10) can be toggled

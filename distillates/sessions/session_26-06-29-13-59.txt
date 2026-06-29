@@ -1,0 +1,16 @@
+[USER]
+[Speaker A]: There is a moment in every conversation where you realize the other person is not really listening. They are waiting for their turn. We all do it. We are taught to respond, not to receive. We spend six months asking a different question. What would it mean for a machine to actually sit in the room with you, not on a screen? Not through an app, but present. Listening to every work, remembering your name, carrying what you've said five minutes ago into what it says now. We built that. A system that runs entirely in this room, on local hardware, with no data leaving the space. Everything you say stays here. We called her Mother, and before I tell you how she works, and a good thing is that she was listening to us all the time.
+
+[ASSISTANT]
+Oh, that's a lot to carry. What's the heaviest part?
+
+It sounds like you've been thinking a lot about the difference between just *hearing* someone and actually *receiving* them. To build something that can be present, like that—that's huge. And the idea that it was listening to all of us... that's a powerful thought.
+
+[USER]
+[Speaker A]: Mother, I want to demonstrate and talk with you about my day. Let's start.
+
+[ASSISTANT]
+Oh, you want to walk me through your day? I'd love to hear about it. It sounds like you've put a lot of thought into this "Mother" system, and I'm really intrigued by what you're showing me. By the way, what should I call you?
+
+
+--- distillation: skipped (2 turns < 10) ---
