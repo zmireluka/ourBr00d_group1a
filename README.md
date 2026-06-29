@@ -10,7 +10,7 @@ She is 424 years old. She has outlived empires, technologies, and every platform
 
 ## Prerequisites
 
-- **EduVPN active** (required for every step below — without it the server is unreachable)
+- **EduVPN active** (required for every step below - without it the server is unreachable)
 - **SSH access** to the server: `ssh username@10.28.18.6` (replace `username` with your personal server username)
 - **Python 3** installed on your own computer (for the client)
 
@@ -29,14 +29,14 @@ Open the integrated terminal and **split it into two panels** side by side (left
 
 > Always reopen **this same folder** in VS Code for future sessions. Every command below assumes both terminal panels start in it.
 
-### 2. Left panel — clone the repo on the server
+### 2. Left panel - clone the repo on the server
 
 ```bash
 ssh username@10.28.18.6
 git clone https://github.com/zmireluka/ourBr00d_group1a.git ourbrood_group1a
 ```
 
-### 3. Right panel — clone the repo on your computer
+### 3. Right panel - clone the repo on your computer
 
 ```bash
 git clone https://github.com/zmireluka/ourBr00d_group1a.git ourbrood_group1a
@@ -69,7 +69,7 @@ Server running on port 8001 - waiting for connection...
 
 (The first start also builds the knowledge base and the Docker images, this can take a few minutes. Later starts are fast.)
 
-### Right panel — start the client
+### Right panel - start the client
 
 ```bash
 cd folder1a/ourbrood_group1a
@@ -115,13 +115,13 @@ Always wait for **green** before you talk.
 
 ## Ending the session
 
-**Step 1 — end the session:** say exactly this, nothing else:
+**Step 1 - end the session:** say exactly this, nothing else:
 
 > **"Lets kill this session."**
 
 Mother says goodbye, the server shuts down cleanly, and your conversation transcript syncs back to your computer automatically.
 
-**Step 2 — shut down completely:** once the session has ended and you are fully done, run this in the left (server) panel:
+**Step 2 - shut down completely:** once the session has ended and you are fully done, run this in the left (server) panel:
 
 ```bash
 ssh username@10.28.18.6
@@ -129,18 +129,18 @@ cd ourbrood_group1a
 docker compose down
 ```
 
-This stops and removes the containers. You do not need to do this before the next session — `bash start.sh` handles the restart automatically.
+This stops and removes the containers. You do not need to do this before the next session - `bash start.sh` handles the restart automatically.
 
 ---
 
 ## What you'll see in the server terminal (optional)
 
-If you watch the **left (server) panel**, you'll see live logs of every turn: your speech transcribed, which speaker you are, and Mother's reply — each with timing measurements.
+If you watch the **left (server) panel**, you'll see live logs of every turn: your speech transcribed, which speaker you are, and Mother's reply - each with timing measurements.
 
 When the session ends, **if the conversation was at least 10 exchanges long**, two things happen automatically:
 
 1. **The transcript is saved** to `distillates/sessions/`.
-2. **The "distiller" runs** — a second AI pass that reviews the whole session and judges what Mother did well and where she drifted from her character. If it finds something noteworthy, it updates **`distillates/lessons.md`** — Mother's growing list of lessons, which is fed back into her next session.
+2. **The "distiller" runs** - a second AI pass that reviews the whole session and judges what Mother did well and where she drifted from her character. If it finds something noteworthy, it updates **`distillates/lessons.md`** - Mother's growing list of lessons, which is fed back into her next session.
 
 (Shorter sessions are just saved as a transcript; the distiller is skipped.)
 
@@ -149,7 +149,7 @@ When the session ends, **if the conversation was at least 10 exchanges long**, t
 ## Troubleshooting
 
 **Mother never reacts to your voice** (the orb stays green but nothing happens):
-this is almost always a **microphone permission** issue. On the first run your operating system may ask whether VS Code (or your terminal) may use the microphone — **allow it**. If you missed the prompt:
+this is almost always a **microphone permission** issue. On the first run your operating system may ask whether VS Code (or your terminal) may use the microphone - **allow it**. If you missed the prompt:
 
 - **macOS:** System Settings → Privacy & Security → Microphone → enable VS Code / Terminal
 - **Windows:** Settings → Privacy → Microphone → allow desktop apps to access your microphone
