@@ -52,7 +52,7 @@ Make sure **EduVPN is active**. Both terminal panels start in your `folder1a` fo
 
 > Only **one** session can run on the shared server at a time. If someone else's pipeline is running, wait until they end it (otherwise the server start fails with a port error).
 
-### Left panel — start the server
+### Left panel - start the server
 
 ```bash
 ssh username@10.28.18.6
@@ -64,7 +64,7 @@ bash start.sh
 Wait until it prints:
 
 ```
-Server running on port 8001 — waiting for connection...
+Server running on port 8001 - waiting for connection...
 ```
 
 (The first start also builds the knowledge base and the Docker images, this can take a few minutes. Later starts are fast.)
@@ -89,29 +89,17 @@ Replace `username` with **your server username** (the same one you use for `ssh`
 
 ---
 
-## Shutting down
-
-When you are completely done and no longer need the pipeline, shut down the server containers. SSH into the server, navigate to your cloned folder, and run:
-
-```bash
-ssh username@10.28.18.6
-cd ourbrood_group1a
-docker compose down
-```
-
-You do not need to do this before starting a session — `bash start.sh` handles that automatically.
-
 ---
 
 ## What happens when you start
 
-A small **window opens** — this is Mother's status display. Mother **greets you out loud first**, so wait until she finishes before you speak.
+A small **window opens** - this is Mother's status display. Mother **greets you out loud first**, so wait until she finishes before you speak.
 
 The window shows a colored orb that tells you whose turn it is:
 
-- 🟢 **green — "Mother is listening"** → she is listening, it's your turn to speak
-- 🟡 **amber, pulsing — "Mother is thinking…"** → she is thinking, wait
-- 🔵 **blue, pulsing — "Mother is speaking"** → she is speaking, wait until she's done
+- 🟢 **green - "Mother is listening"** → she is listening, it's your turn to speak
+- 🟡 **amber, pulsing - "Mother is thinking…"** → she is thinking, wait
+- 🔵 **blue, pulsing - "Mother is speaking"** → she is speaking, wait until she's done
 
 Always wait for **green** before you talk.
 
@@ -120,18 +108,28 @@ Always wait for **green** before you talk.
 ## Talking to Mother
 
 - Speak **normally**, in full sentences.
-- **Don't pause too long in the middle of a thought.** After about half a second of silence the pipeline assumes you are finished and starts answering — so keep a sentence connected, and only go quiet once you're actually done speaking.
+- **Don't pause too long in the middle of a thought.** After about half a second of silence the pipeline assumes you are finished and starts answering - so keep a sentence connected, and only go quiet once you're actually done speaking.
 - Wait for the **green** orb again before your next turn.
 
 ---
 
 ## Ending the session
 
-Say exactly this, nothing else:
+**Step 1 — end the session:** say exactly this, nothing else:
 
 > **"Lets kill this session."**
 
 Mother says goodbye, the server shuts down cleanly, and your conversation transcript syncs back to your computer automatically.
+
+**Step 2 — shut down completely:** once the session has ended and you are fully done, run this in the left (server) panel:
+
+```bash
+ssh username@10.28.18.6
+cd ourbrood_group1a
+docker compose down
+```
+
+This stops and removes the containers. You do not need to do this before the next session — `bash start.sh` handles the restart automatically.
 
 ---
 
