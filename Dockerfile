@@ -1,3 +1,4 @@
+# Base dockerfile for stt and other things, the dockerfile.tts is only for tts
 # Base image: NVIDIA CUDA + Python — gives us GPU access
 FROM nvidia/cuda:12.6.3-cudnn-runtime-ubuntu22.04
 
