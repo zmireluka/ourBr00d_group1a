@@ -264,9 +264,9 @@ UX_EXPERIENCE = True
 # WebSocket address of the server. Env override needed e.g. for local testing
 # (SERVER_HOST=localhost) or if the server IP changes.
 SERVER_HOST = os.getenv("SERVER_HOST", "10.28.18.6")
-# Host port; container-internally server.py stays on 8001 (mapped in docker-compose).
+# Host port; container-internally server.py stays on 8011 (mapped in docker-compose).
 # 8011 instead of 8001 because a foreign container on the shared server holds 8001
-# (as of session 16). Switch back to 8001 once that container is gone.
+# (as of session 16). 
 SERVER_PORT = int(os.getenv("SERVER_PORT", "8011"))
 
 # Audio chunk size: 100ms at 16kHz = 1600 samples = sweet spot between
